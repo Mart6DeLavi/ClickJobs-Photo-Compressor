@@ -1,14 +1,15 @@
 """
-Logger Setup Module
+Logger Setup Module.
 
 Provides a colored console logger and file logging for the image compressor.
 """
 
 import logging
 
+
 class LevelColorFormatter(logging.Formatter):
     """
-    Formatter that colors only the levelname in console logs.
+    Colored console log formatter.
 
     Colors:
         DEBUG    -> Gray
@@ -16,9 +17,6 @@ class LevelColorFormatter(logging.Formatter):
         WARNING  -> Yellow
         ERROR    -> Red
         CRITICAL -> Magenta
-
-    Example:
-        12:00:01 | INFO    | This is an info message
     """
 
     COLORS = {
@@ -32,10 +30,10 @@ class LevelColorFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         """
-        Format a log record with colored levelname.
+        Format log records with colored level names.
 
         Args:
-            record (logging.LogRecord): The log record to format.
+            record (logging.LogRecord): Log record.
 
         Returns:
             str: Formatted log string with colored level name.
@@ -47,20 +45,22 @@ class LevelColorFormatter(logging.Formatter):
         record.levelname = original_levelname
         return formatted
 
+
 def setup_logger(name: str = "ImageCompressor", log_file: str = "compressor.log") -> logging.Logger:
     """
-    Create a logger with colored console output and file logging.
+    Setup a logger with colored console output and file logging.
 
     Args:
-        name (str): Name of the logger.
-        log_file (str): Path to the log file for persistent logging.
+        name (str, optional): Logger name. Defaults to "ImageCompressor".
+        log_file (str, optional): File path for persistent logs. Defaults to "compressor.log".
 
     Returns:
         logging.Logger: Configured logger instance.
 
     Notes:
-        - If the logger already has handlers, new handlers are not added to prevent duplicate logs.
-        - Console logs have colored level names; file logs are plain text.
+        - Console output is colored.
+        - File logs are plain text.
+        - Prevents duplicate handlers if logger is already configured.
     """
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
@@ -68,12 +68,14 @@ def setup_logger(name: str = "ImageCompressor", log_file: str = "compressor.log"
     if not logger.handlers:
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(LevelColorFormatter(
-            "%(asctime)s | %(levelname)-8s | %(message)s", datefmt="%H:%M:%S"
+            "%(asctime)s | %(levelname)-8s | %(message)s",
+            datefmt="%H:%M:%S"
         ))
 
         file_handler = logging.FileHandler(log_file, mode="a", encoding="utf-8")
         file_handler.setFormatter(logging.Formatter(
-            "%(asctime)s | %(levelname)-8s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+            "%(asctime)s | %(levelname)-8s | %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S"
         ))
 
         logger.addHandler(console_handler)
